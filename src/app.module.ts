@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { User } from './typeorm/entities/User';
 import { UsersModule } from './modules/users/users.module';
 import { ArticlesModule } from './modules/articles/articles.module';
+import { Article } from './typeorm/Article';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { ArticlesModule } from './modules/articles/articles.module';
       username: 'root',
       password: '6969',
       database: 'article_db',
-      entities: [User],
+      entities: [User, Article],
       synchronize: true,
     }),
     UsersModule,

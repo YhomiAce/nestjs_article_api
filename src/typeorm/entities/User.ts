@@ -2,8 +2,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Article } from '../Article';
 
 @Entity({ name: 'users' })
 export class User {
@@ -27,4 +29,7 @@ export class User {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @OneToMany(() => Article, (post) => post.user, { onDelete: 'CASCADE' })
+  posts: Article[];
 }

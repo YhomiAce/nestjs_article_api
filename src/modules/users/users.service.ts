@@ -12,7 +12,9 @@ export class UsersService {
   ) {}
 
   async findUsers(): Promise<User[]> {
-    const users = await this.usersRepository.find();
+    const users = await this.usersRepository.find({
+      relations: ['posts'],
+    });
     return users;
   }
 
@@ -22,7 +24,7 @@ export class UsersService {
     return user;
   }
 
-  async editUser(id, userData: UserDto): Promise<User> {
+  async editUser(id: any, userData: UserDto): Promise<User> {
     const user = await this.findUserById(id);
     const updatedUser = await this.usersRepository.update(
       { id },

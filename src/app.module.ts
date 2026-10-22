@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -9,15 +10,20 @@ import { Article } from './typeorm/Article';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '6969',
-      database: 'article_db',
-      entities: [User, Article],
-      synchronize: true,
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        type: 'postgres',
+        host: config.getOrThrow<string>('POSTGRES_HOST'),
+        port: +config.get('POSTGRES_PORT', 5432),
+        username: config.getOrThrow<string>('POSTGRES_USER'),
+        password: config.getOrThrow<string>('POSTGRES_PASSWORD'),
+        database: config.getOrThrow<string>('POSTGRES_DB'),
+        ssl: { rejectUnauthorized: false },
+        entities: [User, Article],
+        synchronize: true,
+      }),
     }),
     UsersModule,
     ArticlesModule,
